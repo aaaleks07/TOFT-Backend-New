@@ -17,11 +17,17 @@ class Quiz
     #[ORM\JoinColumn(nullable: false)]
     private ?Visitor $fk_visitor_id = null;
 
-    #[ORM\Column]
-    private ?int $pkt = null;
-
     #[ORM\Column(length: 255)]
     private ?string $name = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $quiz_title = null;
+
+    #[ORM\Column]
+    private array $questions = [];
+
+    #[ORM\OneToOne(mappedBy: 'quiz_id', cascade: ['persist', 'remove'])]
+    private ?CompletedQuiz $completedQuiz = null;
 
     public function getId(): ?int
     {
@@ -40,18 +46,6 @@ class Quiz
         return $this;
     }
 
-    public function getPkt(): ?int
-    {
-        return $this->pkt;
-    }
-
-    public function setPkt(int $pkt): static
-    {
-        $this->pkt = $pkt;
-
-        return $this;
-    }
-
     public function getName(): ?string
     {
         return $this->name;
@@ -60,6 +54,47 @@ class Quiz
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getQuizTitle(): ?string
+    {
+        return $this->quiz_title;
+    }
+
+    public function setQuizTitle(string $quiz_title): static
+    {
+        $this->quiz_title = $quiz_title;
+
+        return $this;
+    }
+
+    public function getQuestions(): array
+    {
+        return $this->questions;
+    }
+
+    public function setQuestions(array $questions): static
+    {
+        $this->questions = $questions;
+
+        return $this;
+    }
+
+    public function getCompletedQuiz(): ?CompletedQuiz
+    {
+        return $this->completedQuiz;
+    }
+
+    public function setCompletedQuiz(CompletedQuiz $completedQuiz): static
+    {
+        // set the owning side of the relation if necessary
+        if ($completedQuiz->getQuizId() !== $this) {
+            $completedQuiz->setQuizId($this);
+        }
+
+        $this->completedQuiz = $completedQuiz;
 
         return $this;
     }
