@@ -39,6 +39,9 @@ class Visitor
     #[ORM\OneToMany(targetEntity: Tetris::class, mappedBy: 'fk_visitor_id')]
     private Collection $tetris;
 
+    #[ORM\OneToOne(mappedBy: 'visitor_id', cascade: ['persist', 'remove'])]
+    private ?CompletedQuiz $completedQuiz = null;
+
     public function __construct()
     {
         $this->quizzes = new ArrayCollection();
@@ -149,6 +152,23 @@ class Visitor
                 $tetri->setFkVisitorId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCompletedQuiz(): ?CompletedQuiz
+    {
+        return $this->completedQuiz;
+    }
+
+    public function setCompletedQuiz(CompletedQuiz $completedQuiz): static
+    {
+        // set the owning side of the relation if necessary
+        if ($completedQuiz->getVisitorId() !== $this) {
+            $completedQuiz->setVisitorId($this);
+        }
+
+        $this->completedQuiz = $completedQuiz;
 
         return $this;
     }
