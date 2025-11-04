@@ -42,11 +42,18 @@ class Visitor
     #[ORM\OneToOne(mappedBy: 'visitor_id', cascade: ['persist', 'remove'])]
     private ?CompletedQuiz $completedQuiz = null;
 
+    /**
+     * @var Collection<int, JokeVote>
+     */
+    #[ORM\OneToMany(targetEntity: JokeVote::class, mappedBy: 'visitor_id')]
+    private Collection $jokeVotes;
+
     public function __construct()
     {
         $this->quizzes = new ArrayCollection();
         $this->snakes = new ArrayCollection();
         $this->tetris = new ArrayCollection();
+        $this->jokeVotes = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -169,6 +176,36 @@ class Visitor
         }
 
         $this->completedQuiz = $completedQuiz;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, JokeVote>
+     */
+    public function getJokeVotes(): Collection
+    {
+        return $this->jokeVotes;
+    }
+
+    public function addJokeVote(JokeVote $jokeVote): static
+    {
+        if (!$this->jokeVotes->contains($jokeVote)) {
+            $this->jokeVotes->add($jokeVote);
+            $jokeVote->setVisitorId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJokeVote(JokeVote $jokeVote): static
+    {
+        if ($this->jokeVotes->removeElement($jokeVote)) {
+            // set the owning side to null (unless already changed)
+            if ($jokeVote->getVisitorId() === $this) {
+                $jokeVote->setVisitorId(null);
+            }
+        }
 
         return $this;
     }
