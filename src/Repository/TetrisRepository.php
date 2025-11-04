@@ -40,4 +40,20 @@ class TetrisRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    /**
+     * Top-User nach Höchstscore (pro Visitor MAX(pkt)).
+     * Rückgabe: [visitorId, maxScore]
+     */
+    public function findTopUsersByMaxScore(int $limit = 10): array
+    {
+        return $this->createQueryBuilder('t')
+            ->join('t.fk_visitor_id', 'v')
+            ->select('v.id AS visitorId, MAX(t.pkt) AS maxScore')
+            ->groupBy('v.id')
+            ->orderBy('maxScore', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getArrayResult();
+    }
 }
