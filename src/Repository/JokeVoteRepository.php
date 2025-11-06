@@ -1,14 +1,14 @@
 <?php
+// src/Repository/JokeVoteRepository.php
 
 namespace App\Repository;
 
+use App\Entity\Joke;
 use App\Entity\JokeVote;
+use App\Entity\Visitor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<JokeVote>
- */
 class JokeVoteRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,28 +16,14 @@ class JokeVoteRepository extends ServiceEntityRepository
         parent::__construct($registry, JokeVote::class);
     }
 
-//    /**
-//     * @return JokeVote[] Returns an array of JokeVote objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('j')
-//            ->andWhere('j.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('j.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?JokeVote
-//    {
-//        return $this->createQueryBuilder('j')
-//            ->andWhere('j.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findOneByJokeAndVisitor(Joke $joke, Visitor $visitor): ?JokeVote
+    {
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.joke_id = :joke')
+            ->andWhere('v.visitor_id = :visitor')
+            ->setParameter('joke', $joke)
+            ->setParameter('visitor', $visitor)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

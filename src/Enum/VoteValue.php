@@ -4,6 +4,6 @@ namespace App\Enum;
 
 enum VoteValue:int
 {
-    case Down = -1;
-    case Up   = 1;
+    case DOWN = -1;
+    case UP   = 1;
 }
