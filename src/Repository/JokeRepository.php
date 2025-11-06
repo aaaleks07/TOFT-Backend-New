@@ -57,4 +57,14 @@ class JokeRepository extends ServiceEntityRepository
 
         return (int)$res;
     }
+
+    public function findOneByTextCaseInsensitive(string $text): ?Joke
+    {
+        return $this->createQueryBuilder('j')
+            ->andWhere('LOWER(j.text) = LOWER(:t)')
+            ->setParameter('t', $text)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

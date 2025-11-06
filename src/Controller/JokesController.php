@@ -27,10 +27,17 @@ final class JokesController extends AbstractController
         JokeRepository $jokeRepo
     ): JsonResponse {
         $data = json_decode($request->getContent(), true) ?? [];
-        $text = trim($data['text'] ?? '');
+        $raw = (string)($data['text'] ?? '');
+        $text = preg_replace('/\s+/u', ' ', trim($raw)); // trim + Whitespace normalisieren
 
         if ($text === '') {
             return new JsonResponse(['error' => 'Feld "text" ist erforderlich.'], 400);
+        }
+
+        // Case-insensitive Prüfung (DB-agnostisch; s. Abschnitt 2/3 für "richtig" hart)
+        $existing = $jokeRepo->findOneByTextCaseInsensitive($text);
+        if ($existing) {
+            return new JsonResponse(['error' => 'Witz existiert bereits'], 409);
         }
 
         $joke = new Joke();
@@ -39,8 +46,13 @@ final class JokesController extends AbstractController
         $em->persist($joke);
         $em->flush();
 
-        return new JsonResponse(true, 201);
+        return new JsonResponse([
+            'id'    => $joke->getId(),
+            'text'  => $joke->getText(),
+            'votes' => 0,
+        ], 201);
     }
+
 
     #[Route('/vote/{id}', name: 'jokes_vote', methods: ['POST'])]
     #[EnsureVisitor]
