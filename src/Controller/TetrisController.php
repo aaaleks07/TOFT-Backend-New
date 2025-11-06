@@ -12,11 +12,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[EnsureVisitor]
 #[Route('/tetris')]
 final class TetrisController extends AbstractController
 {
     #[Route('/add', name: 'add_tetris', methods: ['POST'])]
-    #[EnsureVisitor]
     public function add(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $tetris = new Tetris();

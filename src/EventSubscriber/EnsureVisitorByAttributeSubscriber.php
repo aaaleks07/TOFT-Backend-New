@@ -95,6 +95,7 @@ final class EnsureVisitorByAttributeSubscriber implements EventSubscriberInterfa
             ->withExpires(strtotime($expiry))
             ->withPath('/')
             ->withSecure($secure)           // im Dev ohne HTTPS ggf. false setzen
+            ->withDomain('.htl3r.at')
             ->withHttpOnly(true)
             ->withSameSite(Cookie::SAMESITE_LAX);
 

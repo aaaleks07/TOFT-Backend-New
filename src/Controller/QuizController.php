@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/quiz')]
+#[EnsureVisitor]
 final class QuizController extends AbstractController
 {
     #[Route('/getQuiz', methods: ['GET'])]
