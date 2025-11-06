@@ -17,10 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/jokes')]
+#[EnsureVisitor]
 final class JokesController extends AbstractController
 {
     #[Route('/add', name: 'jokes_create', methods: ['POST'])]
-    #[EnsureVisitor]
     public function create(
         Request $request,
         EntityManagerInterface $em,
@@ -55,7 +55,6 @@ final class JokesController extends AbstractController
 
 
     #[Route('/vote/{id}', name: 'jokes_vote', methods: ['POST'])]
-    #[EnsureVisitor]
     public function vote(
         Joke $joke,
         Request $request,

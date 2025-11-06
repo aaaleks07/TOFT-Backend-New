@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/snake')]
+#[EnsureVisitor]
 final class SnakeController extends AbstractController
 {
     #[Route('/add', name: 'add_snake', methods: ['POST'])]
